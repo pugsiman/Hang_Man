@@ -1,0 +1,12 @@
+--- !ruby/object:Game
+selected_word: marking
+guesses: []
+displayed_word:
+- '_ '
+- 'a '
+- '_ '
+- '_ '
+- '_ '
+- '_ '
+- '_ '
+guess: a
