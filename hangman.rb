@@ -101,7 +101,7 @@ class Game
 
   # hangman visualization
   def visual_status
-    next
+    
   end
 
   # save and load methods
@@ -110,7 +110,7 @@ class Game
   end
 
   def load_game
-    next
+    
   end
 end
 
