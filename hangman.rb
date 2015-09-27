@@ -27,7 +27,7 @@ class Game
 
   def new_game
     puts "\e[H\e[2J" # using the clear command through ASCII.
-    progress until win_game?
+    progress until win_game
     if @guesses.size == 10
       puts "\n      No wonder people think you\'re silly, you\'ve lost."
       puts "\n      The word was '#{@selected_word}'."
@@ -52,10 +52,10 @@ class Game
 
   def progress
     print "\n\n\n\n\n      #{@displayed_word.join} (#{@displayed_word.length})"
-    # print "#{visual_status}\n"
+    visual_status
     puts "\n      Incorrect guesses: [#{@guesses.join(', ')}]" unless @guesses.empty?
     puts "\n      You have #{10 - @guesses.size} tries left."
-    print "\n      Choose a letter to guess, or type EXIT: "
+    print "\n      Choose a letter to guess, save, or type EXIT: "
     @guess = validate_input(gets.chomp.downcase)
     check_guess
   end
@@ -69,22 +69,22 @@ class Game
 
   def validate_input(input)
     if @guesses.include?(input)
-      puts '      \nAlready used that letter, monkey.'
+      puts "\n      Already used that letter, monkey."
       revalidate
     elsif (/[a-z]/).match(input) && input.length == 1
       input
     elsif input == 'save'
       save_game
     elsif input == 'exit'
-      puts '      \nWow, rude. Bye.'
+      puts "\n      Wow, rude. Bye."
       exit
     else
-      puts '      \nYou can only enter a letter, and a single one at that.'
+      puts "\n      You can only enter a letter, and a single one at that."
       revalidate
     end
   end
 
-  # Fail-safe (re)method to avoid recursively applying Array methods. 
+  # Fail-safe (re)method to avoid recursively applying Array methods.
   def revalidate
     validate_input(gets.chomp.downcase)
   end
@@ -101,12 +101,90 @@ class Game
   end
 
   # Check for win sequence.
-  def win_game?
+  def win_game
     @displayed_word.unspace == @selected_word || @guesses.size == 10
   end
 
-  # Hangman visualization
-  def visual_status; end
+  # Hangman current state visualizatin with lame ASCII art.
+  def visual_status
+    visuals = [
+      %(),
+      %(
+        ____
+      ),
+      %(
+          |
+          |
+          |
+          |
+        __|__
+      ),
+      %(
+          ______
+          |
+          |
+          |
+          |
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |
+          |
+          |
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |     O
+          |
+          |
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |     O
+          |     |
+          |
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |     O
+          |     |
+          |    /
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |     0
+          |     |
+          |    / \
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |    \0
+          |     |
+          |    / \
+        __|__
+      ),
+      %(
+          ______
+          |     |
+          |    \0/
+          |     |
+          |    / \
+        __|__)
+    ]
+    puts "\n\n\n\n\n", visuals[@guesses.size]
+  end
 
   # Save and load methods
   def save_game
@@ -125,6 +203,7 @@ class Game
       YAML.load(data).new_game
     else
       puts 'You have no save file. Are you feeling alright?'
+      start_screen
     end
   end
 end

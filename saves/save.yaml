@@ -1,12 +1,16 @@
 --- !ruby/object:Game
-selected_word: marking
-guesses: []
+selected_word: potable
+guesses:
+- s
+- d
+- f
+- g
 displayed_word:
+- '_ '
+- '_ '
 - '_ '
 - 'a '
 - '_ '
 - '_ '
-- '_ '
-- '_ '
-- '_ '
-guess: a
+- 'e '
+guess: e
