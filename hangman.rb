@@ -27,7 +27,6 @@ class Game
 
   def new_game
     puts "\e[H\e[2J" # using the clear command through ASCII.
-    puts @selected_word
     progress until win_game?
     if @guesses.size == 10
       puts "\n      No wonder people think you\'re silly, you\'ve lost."
