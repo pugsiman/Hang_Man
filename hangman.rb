@@ -31,6 +31,7 @@ class Game
     if @guesses.size == 10
       puts "\n      No wonder people think you\'re silly, you\'ve lost."
       puts "\n      The word was '#{@selected_word}'."
+      visual_status
     else
       puts "\n      Nice job, you\'ve won."
       puts "\n      The word was indeed '#{@selected_word}'."
@@ -159,7 +160,7 @@ class Game
           |    /
         __|__
       ),
-      %(
+      %q(
           ______
           |     |
           |     0
@@ -167,7 +168,7 @@ class Game
           |    / \
         __|__
       ),
-      %(
+      %q(
           ______
           |     |
           |    \0
@@ -175,13 +176,14 @@ class Game
           |    / \
         __|__
       ),
-      %(
+      %q(
           ______
           |     |
           |    \0/
           |     |
           |    / \
-        __|__)
+        __|__
+      )
     ]
     puts "\n\n\n\n\n", visuals[@guesses.size]
   end
