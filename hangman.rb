@@ -1,9 +1,16 @@
 require 'yaml'
 
-# Adding method to Array that removes spaces inside scope of the string.
+# Removes spaces inside the scope of the string.
 class Array
   def unspace
     join.gsub(/[[:space:]]/, '')
+  end
+end
+
+# Aligning strings to the right.
+class String
+  def pad
+    rjust(length + 6)
   end
 end
 
@@ -20,19 +27,20 @@ class Game
 
   def start_screen
     puts "\n      Welcome to hangman."
-    puts '      Would you like to load an existing game, or start a new one?'
-    print '      Type load, new or exit: '
+    puts 'Would you like to load an existing game, or start a new one?'.pad
+    print 'Type load, new or exit: '.pad
     game_choice(gets.chomp.downcase)
   end
 
   def new_game
-    puts "\e[H\e[2J" # using the clear command through ASCII.
-    progress until win_game
+    progress until finish_game
     if @guesses.size == 10
+      puts "\e[H\e[2J" # ANSI clear
       puts "\n      No wonder people think you\'re silly, you\'ve lost."
       puts "\n      The word was '#{@selected_word}'."
       visual_status
     else
+      puts "\e[H\e[2J" # ANSI clear
       puts "\n      Nice job, you\'ve won."
       puts "\n      The word was indeed '#{@selected_word}'."
     end
@@ -44,19 +52,20 @@ class Game
     case choice
     when 'new'  then new_game
     when 'load' then load_game
-    when 'exit' then puts '      Wow, rude. Bye.'
+    when 'exit' then puts 'Wow, rude. Bye.'.pad
     else
-      puts '      You silly goose, you. Try again.'
+      puts 'You silly goose, you. Try again.'.pad
       start_screen
     end
   end
 
   def progress
+    puts "\e[H\e[2J" # ANSI clear
     print "\n\n\n\n\n      #{@displayed_word.join} (#{@displayed_word.length})"
     visual_status
     puts "\n      Incorrect guesses: [#{@guesses.join(', ')}]" unless @guesses.empty?
-    puts "\n      You have #{10 - @guesses.size} tries left."
-    print "\n      Choose a letter to guess, save, or type EXIT: "
+    puts "\n      You have #{10 - @guesses.size} tries left.\n"
+    print 'Choose a letter to guess, save, or type EXIT: '.pad
     @guess = validate_input(gets.chomp.downcase)
     check_guess
   end
@@ -65,7 +74,7 @@ class Game
     dictionary = File.readlines '5desk.txt'
     # A random word from an array of 5 to 12 characters-long words.
     normal_range = proc { |x| x.length.between?(5, 12) }
-    dictionary.select(&normal_range).sample.downcase.delete!("\n")
+    dictionary.select(&normal_range).sample.downcase.chop
   end
 
   def validate_input(input)
@@ -87,6 +96,7 @@ class Game
 
   # Fail-safe (re)method to avoid recursively applying Array methods.
   def revalidate
+    print '      '
     validate_input(gets.chomp.downcase)
   end
 
@@ -102,7 +112,7 @@ class Game
   end
 
   # Check for win sequence.
-  def win_game
+  def finish_game
     @displayed_word.unspace == @selected_word || @guesses.size == 10
   end
 
@@ -111,9 +121,15 @@ class Game
     visuals = [
       %(),
       %(
+      
+      
+      
+      
+      
         ____
       ),
       %(
+      
           |
           |
           |
@@ -163,7 +179,7 @@ class Game
       %q(
           ______
           |     |
-          |     0
+          |     O
           |     |
           |    / \
         __|__
@@ -171,7 +187,7 @@ class Game
       %q(
           ______
           |     |
-          |    \0
+          |    \O
           |     |
           |    / \
         __|__
@@ -179,7 +195,7 @@ class Game
       %q(
           ______
           |     |
-          |    \0/
+          |    \O/
           |     |
           |    / \
         __|__
@@ -194,7 +210,7 @@ class Game
     File.open('saves/save.yaml', 'w') do |file|
       file << YAML.dump(self)
     end
-    puts '      Game has been saved'
+    puts 'Game has been saved.'.pad
     exit
   end
 
@@ -204,7 +220,7 @@ class Game
       data = File.open('saves/save.yaml', &:read)
       YAML.load(data).new_game
     else
-      puts 'You have no save file. Are you feeling alright?'
+      puts 'You have no save file. Are you feeling alright?'.pad
       start_screen
     end
   end
