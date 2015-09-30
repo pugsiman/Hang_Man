@@ -3,7 +3,7 @@ require 'yaml'
 # Removes spaces inside the scope of the string.
 class Array
   def unspace
-    join.gsub(/[[:space:]]/, '')
+    join.gsub(/\s+/, '')
   end
 end
 
@@ -74,29 +74,32 @@ class Game
     dictionary = File.readlines '5desk.txt'
     # A random word from an array of 5 to 12 characters-long words.
     normal_range = proc { |x| x.length.between?(5, 12) }
-    dictionary.select(&normal_range).sample.downcase.chop
+    dictionary.select(&normal_range).sample.downcase.chop # remove \n leftover
   end
 
   def validate_input(input)
     if @guesses.include?(input)
-      puts "\n      Already used that letter, monkey."
+      puts
+      puts 'Already used that letter, monkey.'.pad
       revalidate
     elsif (/[a-z]/).match(input) && input.length == 1
       input
     elsif input == 'save'
       save_game
     elsif input == 'exit'
-      puts "\n      Wow, rude. Bye."
+      puts
+      puts 'Wow, rude. Bye.'.pad
       exit
     else
-      puts "\n      You can only enter a letter, and a single one at that."
+      puts
+      puts 'You can only enter a letter, and a single one at that.'.pad
       revalidate
     end
   end
 
   # Fail-safe (re)method to avoid recursively applying Array methods.
   def revalidate
-    print '      '
+    print ''.pad
     validate_input(gets.chomp.downcase)
   end
 
@@ -121,15 +124,15 @@ class Game
     visuals = [
       %(),
       %(
-      
-      
-      
-      
-      
+
+
+
+
+
         ____
       ),
       %(
-      
+
           |
           |
           |

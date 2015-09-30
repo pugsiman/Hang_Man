@@ -1,16 +1,22 @@
 --- !ruby/object:Game
-selected_word: potable
+selected_word: incautious
 guesses:
-- s
-- d
+- e
+- q
+- v
+- l
+- y
 - f
-- g
+- r
 displayed_word:
-- '_ '
-- '_ '
-- '_ '
+- 'i '
+- 'n '
+- 'c '
 - 'a '
-- '_ '
-- '_ '
-- 'e '
-guess: e
+- 'u '
+- 't '
+- 'i '
+- 'o '
+- 'u '
+- 's '
+guess: n
